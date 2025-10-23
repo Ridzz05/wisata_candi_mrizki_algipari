@@ -17,6 +17,12 @@ class _DetailScreenState extends State<DetailScreen> {
   bool isFavorite = false;
 
   @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.candi.isFavorite;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -27,7 +33,11 @@ class _DetailScreenState extends State<DetailScreen> {
               imageUrl: widget.candi.imageUrls.first,
               onBackPressed: () => Navigator.pop(context),
             ),
-            DetailInfo(candi: widget.candi, onToggleFavorite: toggleFavorite),
+            DetailInfo(
+              candi: widget.candi,
+              isFavorite: isFavorite,
+              onToggleFavorite: toggleFavorite,
+            ),
             DetailGallery(imageUrls: widget.candi.imageUrls),
           ],
         ),
@@ -38,6 +48,7 @@ class _DetailScreenState extends State<DetailScreen> {
   void toggleFavorite() {
     setState(() {
       isFavorite = !isFavorite;
+      widget.candi.isFavorite = isFavorite;
     });
   }
 }

@@ -4,11 +4,13 @@ import 'package:wisata_candi_mrizki_algipari/models/candi.dart';
 
 class DetailInfo extends StatelessWidget {
   final Candi candi;
+  final bool isFavorite;
   final VoidCallback onToggleFavorite;
 
   const DetailInfo({
     super.key,
     required this.candi,
+    required this.isFavorite,
     required this.onToggleFavorite,
   });
 
@@ -27,7 +29,7 @@ class DetailInfo extends StatelessWidget {
                       fontSize: 20, fontWeight: FontWeight.bold)),
               IconButton(
                 icon: Icon(
-                  candi.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
                   color: Colors.redAccent,
                 ),
                 onPressed: onToggleFavorite,
