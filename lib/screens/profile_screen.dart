@@ -9,7 +9,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool isSignedIn = false;
+  bool isSignedIn = true;
   String fullName = "M. Rizki Algipari";
   String userName = "ridzz_05";
   int favoriteCandiCount = 0;
@@ -68,12 +68,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 // Profile info
                 ProfileInfoItem(
-                  icon: Icons.person,
+                  icon: Icons.lock,
                   label: "Pengguna",
-                  value: userName,
+                  value: fullName,
                   showEditIcon: isSignedIn,
                   onEditPressed: () {}, // TODO: edit name
-                  iconColor: Colors.deepPurple,
+                  iconColor: Colors.amber,
                 ),
                 const SizedBox(height: 4),
                 const Divider(color: Colors.grey),
