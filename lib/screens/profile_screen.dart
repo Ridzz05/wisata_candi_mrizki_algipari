@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wisata_candi_mrizki_algipari/widgets/profile_info_item.dart'; // step for refactoring
+import 'package:wisata_candi_mrizki_algipari/widgets/profile_info_item.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,27 +14,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName = "ridzz_05";
   int favoriteCandiCount = 0;
 
-  void signIn() {
-    setState(() => isSignedIn = true);
+  void toggleSignIn() {
+    setState(() {
+      isSignedIn = !isSignedIn;
+    });
   }
-
-  void signOut() {
-    setState(() => isSignedIn = false);
-  }
+  void signIn() => toggleSignIn();
+  void signOut() => toggleSignIn();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Background color band
           Container(
             height: 200,
             width: double.infinity,
             color: Colors.deepPurple,
           ),
 
-          // Content
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
@@ -53,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         if (isSignedIn)
                           IconButton(
-                            onPressed: () {}, // TODO: open bottom sheet later
+                            onPressed: () {},
                             icon: const Icon(Icons.camera_alt),
                             color: Colors.white,
                           ),
@@ -66,46 +64,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const Divider(color: Colors.grey),
                 const SizedBox(height: 4),
 
-                // Profile info
                 ProfileInfoItem(
                   icon: Icons.lock,
-                  label: "Pengguna",
+                  label: 'Pengguna',
                   value: fullName,
-                  showEditIcon: isSignedIn,
-                  onEditPressed: () {}, // TODO: edit name
+                  showEditIcon: false,
+                  onEditPressed: null,
                   iconColor: Colors.amber,
                 ),
                 const SizedBox(height: 4),
                 const Divider(color: Colors.grey),
                 const SizedBox(height: 4),
+                
                 ProfileInfoItem(
                   icon: Icons.person,
-                  label: "Nama",
+                  label: 'Nama',
                   value: userName,
                   showEditIcon: isSignedIn,
-                  onEditPressed: () {},
+                  onEditPressed: isSignedIn ? () {} : null,
                   iconColor: Colors.deepPurple,
                 ),
                 const SizedBox(height: 4),
                 const Divider(color: Colors.grey),
                 const SizedBox(height: 4),
+
                 ProfileInfoItem(
                   icon: Icons.favorite,
-                  label: "Favorite",
+                  label: 'Favorite',
                   value: favoriteCandiCount == 0
-                      ? "-"
-                      : "$favoriteCandiCount favorites",
+                      ? '-'
+                      : '$favoriteCandiCount favorites',
                   showEditIcon: false,
+                  onEditPressed: null,
                   iconColor: Colors.redAccent,
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 4),
                 const Divider(color: Colors.grey),
+                const SizedBox(height: 20),
 
-                // Action button
                 TextButton(
                   onPressed: isSignedIn ? signOut : signIn,
-                  child: Text(isSignedIn ? "Sign Out" : "Sign In"),
+                  child: Text(isSignedIn ? 'Sign Out' : 'Sign In'),
                 ),
               ],
             ),

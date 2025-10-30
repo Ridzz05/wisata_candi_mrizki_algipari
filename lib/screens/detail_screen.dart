@@ -1,9 +1,9 @@
 // screens/detail_screen.dart
 import 'package:flutter/material.dart';
-import 'package:wisata_candi_mrizki_algipari/models/candi.dart';
-import 'package:wisata_candi_mrizki_algipari/widgets/detail_gallery.dart';
-import 'package:wisata_candi_mrizki_algipari/widgets/detail_header.dart';
-import 'package:wisata_candi_mrizki_algipari/widgets/detail_info.dart';
+import '/models/candi.dart';
+import '/widgets/detail_gallery.dart';
+import '/widgets/detail_header.dart';
+import '/widgets/detail_info.dart';
 
 class DetailScreen extends StatefulWidget {
   final Candi candi;
