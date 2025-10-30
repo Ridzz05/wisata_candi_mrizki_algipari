@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "/home/ridzzdev/Desktop/PAB/wisata_candi_mrizki_algipari/linux"
+    "cmake.sourceDirectory": "/home/ridzzdev/Desktop/PAB/wisata_candi_mrizki_algipari/linux",
+    "java.project.sourcePaths": [
+        "lib/screens"
+    ]
 }
