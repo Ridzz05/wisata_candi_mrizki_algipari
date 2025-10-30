@@ -1,3 +1,4 @@
+// folder berada di lib/models/candi.dart
 class Candi {
   final String name;
   final String location;
