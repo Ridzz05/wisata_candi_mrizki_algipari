@@ -10,9 +10,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isSignedIn = true;
-  String fullName = "M. Rizki Algipari";
-  String userName = "ridzz_05";
-  int favoriteCandiCount = 0;
+  String fullName = "M.Rizki Algipari";
+  String userName = "ridzz05";
+  int favoriteCandiCount = 5;
 
   void toggleSignIn() {
     setState(() {
@@ -65,6 +65,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 4),
 
                 ProfileInfoItem(
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
                   icon: Icons.lock,
                   label: 'Pengguna',
                   value: fullName,
@@ -77,6 +80,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 4),
                 
                 ProfileInfoItem(
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
                   icon: Icons.person,
                   label: 'Nama',
                   value: userName,
@@ -89,8 +95,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 4),
 
                 ProfileInfoItem(
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  ),
                   icon: Icons.favorite,
-                  label: 'Favorite',
+                  label: 'Favorit',
                   value: favoriteCandiCount == 0
                       ? '-'
                       : '$favoriteCandiCount favorites',

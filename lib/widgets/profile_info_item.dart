@@ -15,7 +15,7 @@ class ProfileInfoItem extends StatelessWidget {
     required this.value,
     this.showEditIcon = false,
     this.onEditPressed,
-    required this.iconColor,
+    required this.iconColor, required TextStyle style,
   }) : super(key: key);
 
   @override

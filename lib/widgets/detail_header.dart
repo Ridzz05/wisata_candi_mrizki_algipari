@@ -1,4 +1,3 @@
-// widgets/detail_header.dart
 import 'package:flutter/material.dart';
 
 class DetailHeader extends StatelessWidget {
