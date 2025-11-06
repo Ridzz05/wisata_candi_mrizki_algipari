@@ -1,6 +1,6 @@
 // widgets/detail_info.dart
 import 'package:flutter/material.dart';
-import 'package:wisata_candi_mrizki_algipari/models/candi.dart';
+import '/models/candi.dart';
 
 class DetailInfo extends StatelessWidget {
   final Candi candi;

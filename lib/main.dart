@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wisata_candi_mrizki_algipari/screens/signin_screen.dart';
+import '/screens/signin_screen.dart';
 
 void main() {
   runApp(const MyApp());
