@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wisata_candi_mrizki_algipari/screens/profile_screen.dart';
+import 'package:wisata_candi_mrizki_algipari/screens/signin_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: ProfileScreen(),
+      home: SignInScreen(),
+      // home: ProfileScreen(),
       // home : DetailScreen(candi: candi, candilist[0],)
     );
   }

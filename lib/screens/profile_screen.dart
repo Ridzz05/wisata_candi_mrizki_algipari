@@ -10,9 +10,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isSignedIn = true;
-  String fullName = "M.Rizki Algipari";
-  String userName = "ridzz05";
-  int favoriteCandiCount = 5;
+  String fullName = "";
+  String userName = "";
+  int favoriteCandiCount = 0;
 
   void toggleSignIn() {
     setState(() {
