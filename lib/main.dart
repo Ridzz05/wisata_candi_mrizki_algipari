@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: SearchScreen(),
+      home: HomeScreen(),
       // home: ProfileScreen(),
       // home: DetailScreen(candi: candi),\
       // home: ListScreen(),
