@@ -5,6 +5,7 @@ import '/data/candi_data.dart';
 import '/screens/detail_screen.dart';
 import '/screens/signin_screen.dart';
 import '/screens/search_screen.dart';
+import '/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,26 +1,45 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget{
+import '/data/candi_data.dart';
+import '/models/candi.dart';
+import '/screens/detail_screen.dart';
+import '/widgets/item_card.dart';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>{
+class _HomeScreenState extends State<HomeScreen> {
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     return Scaffold(
-      // TODO: 1. Buat Appbar dengan judul Wisata Candi
       appBar: AppBar(
-        title: Text('Wisata Candi'),
+        title: const Text('Wisata Candi'),
       ),
-      // TODO: 2. Buat Body dengan GridView.builder
       body: GridView.builder(
-        gridDelegate: gridDelegate,
-        itemBuilder: itemBuilder,
+        padding: const EdgeInsets.all(8),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemCount: candiList.length,
+        itemBuilder: (context, index) {
+          final Candi candi = candiList[index];
+          return ItemCard(
+            candi: candi,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(candi: candi),
+                ),
+              );
+            },
+          );
+        },
       ),
-      // TODO: 3. Buat ItemCard sebagai return value daru GridView.builder 
     );
   }
 }
