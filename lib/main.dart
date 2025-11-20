@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
-
-// ===============================
-// ENTRY POINT
-// ===============================
 void main() {
   runApp(const MyApp());
 }
 
-// ===============================
-// ROOT APP
-// ===============================
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -26,9 +19,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// ===============================
-// MAIN SCREEN WITH BOTTOM NAV
-// ===============================
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -51,9 +41,6 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: _children[_currentIndex],
 
-      // =========================
-      // BOTTOM NAVIGATION BAR
-      // =========================
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           canvasColor: Colors.deepPurple[50],
@@ -93,9 +80,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-// ===============================
-// SIMPLE SCREEN TEMPLATES
-// ===============================
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
