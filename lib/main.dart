@@ -81,6 +81,10 @@ class _MainScreenState extends State<MainScreen> {
               label: "Search",
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: "Favorit",
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: "Profile",
             ),
