@@ -1,10 +1,8 @@
-// screens/detail_screen.dart
 import 'package:flutter/material.dart';
 import '/models/candi.dart';
 import '/widgets/detail_gallery.dart';
 import '/widgets/detail_header.dart';
 import '/widgets/detail_info.dart';
-import '../data/candi_data.dart';
 
 class DetailScreen extends StatefulWidget {
   final Candi candi;

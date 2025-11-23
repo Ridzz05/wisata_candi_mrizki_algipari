@@ -45,6 +45,9 @@ class _MainScreenState extends State<MainScreen> {
       case 2:
         // Profile Screen
         return const ProfileScreen();
+        // Favorite Screen
+      case 3:
+        return const ProfileScreen();
       default:
         // Default ke Home Screen
         return const HomeScreen();
