@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '/models/candi.dart';
 import '/widgets/detail_gallery.dart';
 import '/widgets/detail_header.dart';
@@ -54,10 +55,25 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   // Favorite handler
-  void toggleFavorite() {
+  void toggleFavorite() async {
+    final prefs = await SharedPreferences.getInstance();
+    
     setState(() {
       isFavorite = !isFavorite;
       widget.candi.isFavorite = isFavorite;
     });
+
+    // Simpan ke SharedPreferences
+    final favoriteNames = prefs.getStringList('favoriteCandiNames') ?? [];
+    
+    if (isFavorite) {
+      if (!favoriteNames.contains(widget.candi.name)) {
+        favoriteNames.add(widget.candi.name);
+      }
+    } else {
+      favoriteNames.remove(widget.candi.name);
+    }
+    
+    await prefs.setStringList('favoriteCandiNames', favoriteNames);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/screens/home_screen.dart';
 import '/screens/search_screen.dart';
 import '/screens/profile_screen.dart';
+import '/screens/favorite_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
         return const SearchScreen();
       case 2:
         // Profile Screen
-        return const ProfileScreen();
+        return const FavoriteScreen();
         // Favorite Screen
       case 3:
         return const ProfileScreen();
