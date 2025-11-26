@@ -12,7 +12,25 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,16 +45,34 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: candiList.length,
         itemBuilder: (context, index) {
           final Candi candi = candiList[index];
-          return ItemCard(
-            candi: candi,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailScreen(candi: candi),
-                ),
-              );
-            },
+          final Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0)
+              .animate(
+            CurvedAnimation(
+              parent: _animationController,
+              curve: Interval(
+                (index / candiList.length),
+                ((index + 1) / candiList.length),
+                curve: Curves.easeOut,
+              ),
+            ),
+          );
+
+          return FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(
+              scale: animation,
+              child: ItemCard(
+                candi: candi,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailScreen(candi: candi),
+                    ),
+                  );
+                },
+              ),
+            ),
           );
         },
       ),

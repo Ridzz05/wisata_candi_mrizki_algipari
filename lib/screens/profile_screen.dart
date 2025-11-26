@@ -10,13 +10,17 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen>
+    with SingleTickerProviderStateMixin {
   // 1. Declare necessary variables
   bool isSignedIn = false;
   String fullName = ''; // Example name
   String userName = ''; // Example username
   int favoriteCandiCount = 0;
   String? profileImageBase64;
+  
+  late AnimationController _fadeAnimationController;
+  late Animation<double> _fadeAnimation;
 
   //5. implementasi fungsi signIn
   void signIn() {
@@ -113,6 +117,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     _checkSignInStatus();
+    
+    _fadeAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeAnimationController, curve: Curves.easeIn),
+    );
+    
+    _fadeAnimationController.forward();
+    
     if (isSignedIn) {
       _identitas();
       _getFavoriteCount();
@@ -122,71 +138,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
+  void dispose() {
+    _fadeAnimationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: 200,
-            width: double.infinity,
-            color: Colors.deepPurple,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 150), // 200 - 50 = 150
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.deepPurple,
-                              width: 2,
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundColor: Colors.deepPurple[100],
-                            backgroundImage: profileImageBase64 != null
-                                ? MemoryImage(base64Decode(profileImageBase64!))
-                                : null,
-                            child: profileImageBase64 == null
-                                ? Icon(
-                                    Icons.person,
-                                    size: 60,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Stack(
+          children: [
+            Container(
+              height: 200,
+              width: double.infinity,
+              color: Colors.deepPurple,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 150), // 200 - 50 = 150
+                        child: ScaleTransition(
+                          scale: _fadeAnimation,
+                          child: Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
                                     color: Colors.deepPurple,
-                                  )
-                                : null,
+                                    width: 2,
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.deepPurple[100],
+                                  backgroundImage: profileImageBase64 != null
+                                      ? MemoryImage(base64Decode(profileImageBase64!))
+                                      : null,
+                                  child: profileImageBase64 == null
+                                      ? Icon(
+                                          Icons.person,
+                                          size: 60,
+                                          color: Colors.deepPurple,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                              if (isSignedIn)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.deepPurple,
+                                  ),
+                                  child: IconButton(
+                                    onPressed: _pickImage,
+                                    icon: Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                        if (isSignedIn)
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.deepPurple,
-                            ),
-                            child: IconButton(
-                              onPressed: _pickImage,
-                              icon: Icon(
-                                Icons.camera_alt,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Divider(color: Colors.deepPurple[100]),
-                SizedBox(height: 4),
-                Row(
+                    SizedBox(height: 20),
+                    Divider(color: Colors.deepPurple[100]),
+                    SizedBox(height: 4),
+                    Row(
                   children: [
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 3,
@@ -273,10 +301,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 isSignedIn
                     ? TextButton(onPressed: signOut, child: Text('Sign Out'))
                     : TextButton(onPressed: signIn, child: Text('Sign In')),
-              ],
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -100,3 +100,4 @@ class _ItemCardState extends State<ItemCard> with SingleTickerProviderStateMixin
       ),
     );
   }
+}

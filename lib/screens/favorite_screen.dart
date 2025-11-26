@@ -12,13 +12,25 @@ class FavoriteScreen extends StatefulWidget {
   State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _FavoriteScreenState extends State<FavoriteScreen> {
+class _FavoriteScreenState extends State<FavoriteScreen>
+    with SingleTickerProviderStateMixin {
   List<Candi> _favoriteCandis = [];
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    )..forward();
     _loadFavorites();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   // Fungsi untuk memuat data favorit dari SharedPreferences
@@ -68,10 +80,18 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.favorite_border,
-                    size: 80,
-                    color: Colors.deepPurple[200],
+                  ScaleTransition(
+                    scale: Tween<double>(begin: 0.5, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: _animationController,
+                        curve: Curves.elasticOut,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.favorite_border,
+                      size: 80,
+                      color: Colors.deepPurple[200],
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -100,43 +120,61 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               itemCount: _favoriteCandis.length,
               itemBuilder: (context, index) {
                 final Candi candi = _favoriteCandis[index];
-                return Stack(
-                  children: [
-                    ItemCard(
-                      candi: candi,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailScreen(candi: candi),
-                          ),
-                        ).then((_) {
-                          // Refresh ketika kembali dari detail screen
-                          _loadFavorites();
-                        });
-                      },
+                final Animation<double> animation =
+                    Tween<double>(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: _animationController,
+                    curve: Interval(
+                      (index / _favoriteCandis.length),
+                      ((index + 1) / _favoriteCandis.length),
+                      curve: Curves.easeOut,
                     ),
-                    // Tombol hapus favorit
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: GestureDetector(
-                        onTap: () => _removeFavorite(candi),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.9),
-                          ),
-                          padding: const EdgeInsets.all(8),
-                          child: const Icon(
-                            Icons.close,
-                            color: Colors.red,
-                            size: 20,
+                  ),
+                );
+                return FadeTransition(
+                  opacity: animation,
+                  child: ScaleTransition(
+                    scale: animation,
+                    child: Stack(
+                      children: [
+                        ItemCard(
+                          candi: candi,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailScreen(candi: candi),
+                              ),
+                            ).then((_) {
+                              // Refresh ketika kembali dari detail screen
+                              _loadFavorites();
+                            });
+                          },
+                        ),
+                        // Tombol hapus favorit
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () => _removeFavorite(candi),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.red,
+                                size: 20,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 );
               },
             ),
