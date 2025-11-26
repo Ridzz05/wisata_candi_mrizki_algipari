@@ -32,6 +32,7 @@ class _DetailScreenState extends State<DetailScreen> {
           children: [
             DetailHeader(
               imageUrl: widget.candi.imageUrls.first,
+              candiName: widget.candi.name,
 
               // sesuai instruksi materi: tombol back menggunakan onTap → Navigator.pop
               onBackPressed: () {
