@@ -3,6 +3,8 @@ import '/screens/home_screen.dart';
 import '/screens/search_screen.dart';
 import '/screens/profile_screen.dart';
 import '/screens/favorite_screen.dart';
+import '/screens/signin_screen.dart';
+import '/screens/signup_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +22,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
       ),
       home: const MainScreen(),
+      routes: {
+        '/signin': (context) => const SignInScreen(),
+        '/signinscreen': (context) => const SignInScreen(),
+        '/signup': (context) => const SignUpScreen(),
+      },
     );
   }
 }

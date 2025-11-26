@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,6 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String fullName = ''; // Example name
   String userName = ''; // Example username
   int favoriteCandiCount = 0;
+  String? profileImageBase64;
 
   //5. implementasi fungsi signIn
   void signIn() {
@@ -24,14 +27,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void signOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isSignedIn', false);
-    //await prefs.remove('username');
-    //await prefs.remove('name');
 
     setState(() {
       isSignedIn = !isSignedIn;
       userName = '';
       fullName = '';
+      favoriteCandiCount = 0;
     });
+
+    // Tampilkan snackbar konfirmasi
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Anda berhasil sign out')),
+      );
+    }
   }
 
   void _checkSignInStatus() async {
@@ -49,11 +58,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  // Fungsi untuk mendapatkan jumlah favorit
+  Future<void> _getFavoriteCount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final favoriteNames = prefs.getStringList('favoriteCandiNames') ?? [];
+    setState(() {
+      favoriteCandiCount = favoriteNames.length;
+    });
+  }
+
+  // Fungsi untuk memilih gambar dari gallery
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        // Baca file sebagai bytes
+        final bytes = await pickedFile.readAsBytes();
+        // Convert ke base64
+        final base64String = base64Encode(bytes);
+
+        // Simpan ke SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('profileImageBase64', base64String);
+
+        setState(() {
+          profileImageBase64 = base64String;
+        });
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Foto profil berhasil diperbarui')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+  }
+
+  // Fungsi untuk memuat foto profil dari SharedPreferences
+  Future<void> _loadProfileImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      profileImageBase64 = prefs.getString('profileImageBase64');
+    });
+  }
+
   @override
   void initState() {
     _checkSignInStatus();
     if (isSignedIn) {
       _identitas();
+      _getFavoriteCount();
+      _loadProfileImage();
     }
     super.initState();
   }
@@ -89,17 +152,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundImage: AssetImage(
-                              'assets/placeholder_image.png',
-                            ),
+                            backgroundColor: Colors.deepPurple[100],
+                            backgroundImage: profileImageBase64 != null
+                                ? MemoryImage(base64Decode(profileImageBase64!))
+                                : null,
+                            child: profileImageBase64 == null
+                                ? Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: Colors.deepPurple,
+                                  )
+                                : null,
                           ),
                         ),
                         if (isSignedIn)
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.camera_alt,
-                              color: Colors.deepPurple[50],
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.deepPurple,
+                            ),
+                            child: IconButton(
+                              onPressed: _pickImage,
+                              icon: Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                       ],
