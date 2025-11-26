@@ -6,6 +6,7 @@ import '/widgets/detail_info.dart';
 
 class DetailScreen extends StatefulWidget {
   final Candi candi;
+
   const DetailScreen({super.key, required this.candi});
 
   @override
@@ -30,20 +31,29 @@ class _DetailScreenState extends State<DetailScreen> {
           children: [
             DetailHeader(
               imageUrl: widget.candi.imageUrls.first,
-              onBackPressed: () => Navigator.pop(context),
+
+              // sesuai instruksi materi: tombol back menggunakan onTap → Navigator.pop
+              onBackPressed: () {
+                Navigator.pop(context);
+              },
             ),
+
             DetailInfo(
               candi: widget.candi,
               isFavorite: isFavorite,
               onToggleFavorite: toggleFavorite,
             ),
-            DetailGallery(imageUrls: widget.candi.imageUrls),
+
+            DetailGallery(
+              imageUrls: widget.candi.imageUrls,
+            ),
           ],
         ),
       ),
     );
   }
 
+  // Favorite handler
   void toggleFavorite() {
     setState(() {
       isFavorite = !isFavorite;
