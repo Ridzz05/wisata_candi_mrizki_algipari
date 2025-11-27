@@ -46,9 +46,7 @@ class _DetailScreenState extends State<DetailScreen> {
               onToggleFavorite: toggleFavorite,
             ),
 
-            DetailGallery(
-              imageUrls: widget.candi.imageUrls,
-            ),
+            DetailGallery(imageUrls: widget.candi.imageUrls),
           ],
         ),
       ),
@@ -58,7 +56,7 @@ class _DetailScreenState extends State<DetailScreen> {
   // Favorite handler
   void toggleFavorite() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     setState(() {
       isFavorite = !isFavorite;
       widget.candi.isFavorite = isFavorite;
@@ -66,7 +64,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
     // Simpan ke SharedPreferences
     final favoriteNames = prefs.getStringList('favoriteCandiNames') ?? [];
-    
+
     if (isFavorite) {
       if (!favoriteNames.contains(widget.candi.name)) {
         favoriteNames.add(widget.candi.name);
@@ -74,7 +72,7 @@ class _DetailScreenState extends State<DetailScreen> {
     } else {
       favoriteNames.remove(widget.candi.name);
     }
-    
+
     await prefs.setStringList('favoriteCandiNames', favoriteNames);
   }
 }

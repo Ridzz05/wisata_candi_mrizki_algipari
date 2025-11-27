@@ -71,10 +71,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Favorit Saya'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Favorit Saya'), centerTitle: true),
       body: _favoriteCandis.isEmpty
           ? Center(
               child: Column(
@@ -122,15 +119,15 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                 final Candi candi = _favoriteCandis[index];
                 final Animation<double> animation =
                     Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: _animationController,
-                    curve: Interval(
-                      (index / _favoriteCandis.length),
-                      ((index + 1) / _favoriteCandis.length),
-                      curve: Curves.easeOut,
-                    ),
-                  ),
-                );
+                      CurvedAnimation(
+                        parent: _animationController,
+                        curve: Interval(
+                          (index / _favoriteCandis.length),
+                          ((index + 1) / _favoriteCandis.length),
+                          curve: Curves.easeOut,
+                        ),
+                      ),
+                    );
                 return FadeTransition(
                   opacity: animation,
                   child: ScaleTransition(
@@ -161,7 +158,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                               padding: const EdgeInsets.all(8),
                               child: const Icon(

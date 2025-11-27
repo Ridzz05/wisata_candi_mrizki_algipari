@@ -19,7 +19,8 @@ class _SignInScreenState extends State<SignInScreen> {
   bool _obscurePassword = true;
 
   Future<Map<String, String>> _retrieveAndDecryptDataFromPrefs(
-      SharedPreferences sharedPreferences) async {
+    SharedPreferences sharedPreferences,
+  ) async {
     final encryptedUsername = sharedPreferences.getString('username') ?? '';
     final encryptedPassword = sharedPreferences.getString('password') ?? '';
     final keyString = sharedPreferences.getString('key') ?? '';
@@ -39,11 +40,10 @@ class _SignInScreenState extends State<SignInScreen> {
   void _signIn() async {
     try {
       final Future<SharedPreferences> prefsFuture =
-      SharedPreferences.getInstance();
+          SharedPreferences.getInstance();
 
       final String username = _usernameController.text;
       final String password = _passwordController.text;
-      print('Sign in attempt');
 
       if (username.isNotEmpty && password.isNotEmpty) {
         final SharedPreferences prefs = await prefsFuture;
@@ -62,19 +62,25 @@ class _SignInScreenState extends State<SignInScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.pushReplacementNamed(context, '/');
             });
-            print('Sign in succeeded');
           } else {
-            print('Username or password is incorrect');
+            setState(() {
+              _errorText = 'Username atau password tidak sesuai';
+            });
           }
         } else {
-          print('No stored credentials found');
+          setState(() {
+            _errorText = 'Akun tidak ditemukan';
+          });
         }
       } else {
-        print('Username and password cannot be empty');
-        // Tambahkan pesan untuk kasus ketika username atau password kosong
+        setState(() {
+          _errorText = 'Username dan password tidak boleh kosong';
+        });
       }
     } catch (e) {
-      print('An error occurred: $e');
+      setState(() {
+        _errorText = 'Terjadi kesalahan: $e';
+      });
     }
   }
 
@@ -82,95 +88,94 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // TODO: 2. Pasang AppBar
-      appBar: AppBar(
-        title: const Text('Sign In'),
-      ),
+      appBar: AppBar(title: const Text('Sign In')),
       // TODO: 3. Pasang body
       body: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                child: Column(
-                  // TODO: 4. Atur mainAxisAlignment dan crossAxisAlignment
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // TODO: 5. Pasang TextFormField Nama Pengguna
-                    TextFormField(
-                      controller: _usernameController,
-                      decoration: const InputDecoration(
-                        labelText: "Nama Pengguna",
-                        border: OutlineInputBorder(),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              child: Column(
+                // TODO: 4. Atur mainAxisAlignment dan crossAxisAlignment
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // TODO: 5. Pasang TextFormField Nama Pengguna
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      labelText: "Nama Pengguna",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  // TODO: 6. Pasang TextFormField Kata Sandi
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: "Kata Sandi",
+                      errorText: _errorText.isNotEmpty ? _errorText : null,
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
                       ),
                     ),
-                    // TODO: 6. Pasang TextFormField Kata Sandi
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                          labelText: "Kata Sandi",
-                          errorText: _errorText.isNotEmpty ? _errorText : null,
-                          border: const OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
+                    obscureText: _obscurePassword,
+                  ),
+                  // TODO: 7. Pasang ElevatedButton Sign In
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      _signIn();
+                    },
+                    child: const Text("Sign In"),
+                  ),
+                  // TODO: 8. Pasang TextButton Sign Up
+                  const SizedBox(height: 10),
+                  // TextButton(
+                  //     onPressed: () {
+                  //       Navigator.pushNamed(context, '/signup');
+                  //     },
+                  //     child: Text('Belum punya akun? Daftar di sini.')
+                  // ),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Belum punya akun? ',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.deepPurple,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Daftar di sini.',
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                            fontSize: 16,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pushNamed(context, '/signup');
                             },
-                            icon: Icon(_obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                          )),
-                      obscureText: _obscurePassword,
+                        ),
+                      ],
                     ),
-                    // TODO: 7. Pasang ElevatedButton Sign In
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          _signIn();
-                        },
-                        child: const Text("Sign In")),
-                    // TODO: 8. Pasang TextButton Sign Up
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    // TextButton(
-                    //     onPressed: () {
-                    //       Navigator.pushNamed(context, '/signup');
-                    //     },
-                    //     child: Text('Belum punya akun? Daftar di sini.')
-                    // ),
-                    RichText(
-                        text: TextSpan(
-                            text: 'Belum punya akun? ',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.deepPurple,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: 'Daftar di sini.',
-                                style: const TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 16,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushNamed(context, '/signup');
-                                  },
-                              ),
-                            ]))
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

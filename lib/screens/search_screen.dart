@@ -3,16 +3,15 @@ import '/models/candi.dart';
 import '/data/candi_data.dart';
 import '/screens/detail_screen.dart';
 
-
-class SearchScreen extends StatefulWidget{
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen>{
-  //TODO 1: Deklarasikan variabel yang dibutuhkan 
+class _SearchScreenState extends State<SearchScreen> {
+  //TODO 1: Deklarasikan variabel yang dibutuhkan
   late List<Candi> _filteredCandi;
   String _searchQuery = "";
   late TextEditingController _searchController;
@@ -30,10 +29,11 @@ class _SearchScreenState extends State<SearchScreen>{
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       // TODO 2: Buat appbar dengan judul pencarian candi
-      appBar: AppBar(title: Text('Pencarian Candi'),),
+      appBar: AppBar(title: Text('Pencarian Candi')),
       // TODO 3: Buat Body Berupa Column
       body: Column(
         children: [
@@ -54,9 +54,11 @@ class _SearchScreenState extends State<SearchScreen>{
                       _filteredCandi = candiList;
                     } else {
                       _filteredCandi = candiList
-                          .where((candi) => candi.name
-                              .toLowerCase()
-                              .contains(query.toLowerCase()))
+                          .where(
+                            (candi) => candi.name.toLowerCase().contains(
+                              query.toLowerCase(),
+                            ),
+                          )
                           .toList();
                     }
                   });
@@ -78,7 +80,10 @@ class _SearchScreenState extends State<SearchScreen>{
                           },
                         )
                       : null,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
                 controller: _searchController,
               ),
@@ -103,7 +108,10 @@ class _SearchScreenState extends State<SearchScreen>{
                       );
                     },
                     child: Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -128,7 +136,10 @@ class _SearchScreenState extends State<SearchScreen>{
                               children: [
                                 Text(
                                   candi.name,
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(candi.location),
@@ -144,7 +155,7 @@ class _SearchScreenState extends State<SearchScreen>{
             ),
           ),
         ],
-      )
+      ),
     );
   }
 }

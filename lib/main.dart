@@ -18,9 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wisata Candi',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-      ),
+      theme: ThemeData(primarySwatch: Colors.deepPurple),
       home: const MainScreen(),
       routes: {
         '/signin': (context) => const SignInScreen(),
@@ -53,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
       case 2:
         // Profile Screen
         return const FavoriteScreen();
-        // Favorite Screen
+      // Favorite Screen
       case 3:
         return const ProfileScreen();
       default:
@@ -68,9 +66,7 @@ class _MainScreenState extends State<MainScreen> {
       body: _renderScreen(),
 
       bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor: Colors.deepPurple[50],
-        ),
+        data: Theme.of(context).copyWith(canvasColor: Colors.deepPurple[50]),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -83,26 +79,16 @@ class _MainScreenState extends State<MainScreen> {
           unselectedItemColor: Colors.deepPurple[200],
           showUnselectedLabels: true,
           items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: "Search",
-            ),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: "Favorit",
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Profile",
-            ),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
           ],
         ),
       ),
     );
   }
 }
-

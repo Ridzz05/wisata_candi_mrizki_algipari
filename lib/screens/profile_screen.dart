@@ -18,7 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   String userName = ''; // Example username
   int favoriteCandiCount = 0;
   String? profileImageBase64;
-  
+
   late AnimationController _fadeAnimationController;
   late Animation<double> _fadeAnimation;
 
@@ -41,9 +41,9 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     // Tampilkan snackbar konfirmasi
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Anda berhasil sign out')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Anda berhasil sign out')));
     }
   }
 
@@ -79,8 +79,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   // - Tampilkan SnackBar konfirmasi jika berhasil
   Future<void> _pickImage() async {
     try {
-      final XFile? pickedFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
 
       if (pickedFile != null) {
         // Baca file sebagai bytes
@@ -104,9 +105,9 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -125,19 +126,19 @@ class _ProfileScreenState extends State<ProfileScreen>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeAnimationController, curve: Curves.easeIn),
     );
-    
+
     _fadeAnimationController.forward();
-    
+
     // Load sign in status dan data
     _checkSignInStatus();
     _loadProfileImage();
     _identitas();
     _getFavoriteCount();
-    
+
     super.initState();
   }
 
@@ -183,7 +184,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 radius: 50,
                                 backgroundColor: Colors.deepPurple[100],
                                 backgroundImage: profileImageBase64 != null
-                                    ? MemoryImage(base64Decode(profileImageBase64!))
+                                    ? MemoryImage(
+                                        base64Decode(profileImageBase64!),
+                                      )
                                     : null,
                                 child: profileImageBase64 == null
                                     ? Icon(
@@ -212,7 +215,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.3,
+                                        ),
                                         blurRadius: 8,
                                         offset: const Offset(0, 2),
                                       ),
@@ -320,8 +325,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ],
                     ),
                     isSignedIn
-                        ? TextButton(onPressed: signOut, child: const Text('Sign Out'))
-                        : TextButton(onPressed: signIn, child: const Text('Sign In')),
+                        ? TextButton(
+                            onPressed: signOut,
+                            child: const Text('Sign Out'),
+                          )
+                        : TextButton(
+                            onPressed: signIn,
+                            child: const Text('Sign In'),
+                          ),
                   ],
                 ),
               ),

@@ -34,8 +34,8 @@ class DetailGallery extends StatelessWidget {
                       builder: (_) => Dialog(
                         child: CachedNetworkImage(
                           imageUrl: imageUrls[index],
-                          placeholder: (_, __) => const Center(
-                              child: CircularProgressIndicator()),
+                          placeholder: (_, __) =>
+                              const Center(child: CircularProgressIndicator()),
                           errorWidget: (_, __, ___) => const Icon(Icons.error),
                         ),
                       ),
@@ -52,8 +52,8 @@ class DetailGallery extends StatelessWidget {
                           width: 140,
                           height: 100,
                           fit: BoxFit.cover,
-                          placeholder: (_, __) => const Center(
-                              child: CircularProgressIndicator()),
+                          placeholder: (_, __) =>
+                              const Center(child: CircularProgressIndicator()),
                           errorWidget: (_, __, ___) => const Icon(Icons.error),
                         ),
                       ),

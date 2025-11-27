@@ -33,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         !password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
       setState(() {
         _errorText =
-        'Minimal 8 karakter, kombinasi [A-Z], [a-z], [0-9], [!@#\\\$%^&*(),.?":{}|<>]';
+            'Minimal 8 karakter, kombinasi [A-Z], [a-z], [0-9], [!@#\\\$%^&*(),.?":{}|<>]';
       });
       return;
     }
@@ -57,7 +57,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     // Buat navigasi ke SignInScreen
-    Navigator.pushReplacementNamed(context, '/signin');
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/signin');
+    }
   }
 
   // TODO: 11. Membuat metode dispose
@@ -73,100 +75,102 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // TODO: 2. Pasang AppBar
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-      ),
+      appBar: AppBar(title: const Text('Sign Up')),
       // TODO: 3. Pasang body
       body: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                child: Column(
-                  // TODO: 4. Atur mainAxisAlignment dan crossAxisAlignment
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // TODO: 5. Pasang TextFormField Nama Lengkap
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: "Nama",
-                        border: OutlineInputBorder(),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              child: Column(
+                // TODO: 4. Atur mainAxisAlignment dan crossAxisAlignment
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // TODO: 5. Pasang TextFormField Nama Lengkap
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      labelText: "Nama",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // TODO: 6. Pasang TextFormField Nama Pengguna
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      labelText: "Nama Pengguna",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  // TODO: 7. Pasang TextFormField Kata Sandi
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: "Kata Sandi",
+                      errorText: _errorText.isNotEmpty ? _errorText : null,
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // TODO: 6. Pasang TextFormField Nama Pengguna
-                    TextFormField(
-                      controller: _usernameController,
-                      decoration: const InputDecoration(
-                        labelText: "Nama Pengguna",
-                        border: OutlineInputBorder(),
+                    obscureText: _obscurePassword,
+                  ),
+                  // TODO: 8. Pasang ElevatedButton Sign Up
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _signUp,
+                    child: const Text("Sign Up"),
+                  ),
+                  // TODO: 9. Pasang TextButton Sign In
+                  const SizedBox(height: 10),
+                  // TextButton(
+                  //     onPressed: () {},
+                  //     child: Text('Sudah punya akun? Masuk di sini.')
+                  // ),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Sudah punya akun? ',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.deepPurple,
                       ),
-                    ),
-                    // TODO: 7. Pasang TextFormField Kata Sandi
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                          labelText: "Kata Sandi",
-                          errorText: _errorText.isNotEmpty ? _errorText : null,
-                          border: const OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
+                      children: [
+                        TextSpan(
+                          text: 'Masuk di sini.',
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                            fontSize: 16,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                '/signin',
+                              );
                             },
-                            icon: Icon(_obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                          )),
-                      obscureText: _obscurePassword,
+                        ),
+                      ],
                     ),
-                    // TODO: 8. Pasang ElevatedButton Sign Up
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ElevatedButton(onPressed: _signUp, child: const Text("Sign Up")),
-                    // TODO: 9. Pasang TextButton Sign In
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    // TextButton(
-                    //     onPressed: () {},
-                    //     child: Text('Sudah punya akun? Masuk di sini.')
-                    // ),
-                    RichText(
-                        text: TextSpan(
-                            text: 'Sudah punya akun? ',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.deepPurple,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: 'Masuk di sini.',
-                                style: const TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 16,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushReplacementNamed(context, '/signin');
-                                  },
-                              ),
-                            ]))
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -30,10 +30,10 @@ class _DetailInfoState extends State<DetailInfo>
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
-      CurvedAnimation(parent: _slideController, curve: Curves.easeOut),
-    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOut));
     _slideController.forward();
   }
 
@@ -57,9 +57,13 @@ class _DetailInfoState extends State<DetailInfo>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(widget.candi.name,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(
+                    widget.candi.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   ScaleTransition(
                     scale: _slideController,
                     child: IconButton(
@@ -75,32 +79,33 @@ class _DetailInfoState extends State<DetailInfo>
                 ],
               ),
               const SizedBox(height: 8),
-              Row(children: [
-                const Icon(Icons.location_on,
-                    size: 18, color: Colors.amber),
-                const SizedBox(width: 6),
-                Text(widget.candi.location),
-              ]),
+              Row(
+                children: [
+                  const Icon(Icons.location_on, size: 18, color: Colors.amber),
+                  const SizedBox(width: 6),
+                  Text(widget.candi.location),
+                ],
+              ),
               const SizedBox(height: 4),
-              Row(children: [
-                const Icon(
-                  Icons.calendar_month,
-                  size: 18,
-                  color: Colors.blue,
-                ),
-                const SizedBox(width: 6),
-                Text('Dibangun: ${widget.candi.built}'),
-              ]),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_month,
+                    size: 18,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 6),
+                  Text('Dibangun: ${widget.candi.built}'),
+                ],
+              ),
               const SizedBox(height: 4),
-              Row(children: [
-                const Icon(
-                  Icons.house,
-                  size: 18,
-                  color: Colors.pink,
-                ),
-                const SizedBox(width: 6),
-                Text('Tipe: ${widget.candi.type}'),
-              ]),
+              Row(
+                children: [
+                  const Icon(Icons.house, size: 18, color: Colors.pink),
+                  const SizedBox(width: 6),
+                  Text('Tipe: ${widget.candi.type}'),
+                ],
+              ),
               const SizedBox(height: 16),
               Divider(color: Colors.deepPurple.shade100),
               const SizedBox(height: 8),

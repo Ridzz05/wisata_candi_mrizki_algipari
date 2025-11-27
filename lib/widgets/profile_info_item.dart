@@ -9,14 +9,15 @@ class ProfileInfoItem extends StatelessWidget {
   final Color iconColor;
 
   const ProfileInfoItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.value,
     this.showEditIcon = false,
     this.onEditPressed,
-    required this.iconColor, required TextStyle style,
-  }) : super(key: key);
+    required this.iconColor,
+    required TextStyle style,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +40,7 @@ class ProfileInfoItem extends StatelessWidget {
               Icon(icon, color: iconColor),
               const SizedBox(width: 8),
               // Gunakan Expanded agar label tidak meluber keluar.
-              Expanded(
-                child: Text(label, style: labelStyle),
-              ),
+              Expanded(child: Text(label, style: labelStyle)),
             ],
           ),
         ),
@@ -49,9 +48,7 @@ class ProfileInfoItem extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
-                child: Text(value, style: valueStyle),
-              ),
+              Flexible(child: Text(value, style: valueStyle)),
               if (showEditIcon)
                 IconButton(
                   icon: const Icon(Icons.edit),

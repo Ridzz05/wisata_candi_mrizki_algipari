@@ -6,17 +6,14 @@ class ItemCard extends StatefulWidget {
   final Candi candi;
   final VoidCallback? onTap;
 
-  const ItemCard({
-    super.key,
-    required this.candi,
-    this.onTap,
-  });
+  const ItemCard({super.key, required this.candi, this.onTap});
 
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
 
-class _ItemCardState extends State<ItemCard> with SingleTickerProviderStateMixin {
+class _ItemCardState extends State<ItemCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -27,9 +24,10 @@ class _ItemCardState extends State<ItemCard> with SingleTickerProviderStateMixin
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.05,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -86,10 +84,7 @@ class _ItemCardState extends State<ItemCard> with SingleTickerProviderStateMixin
                       widget.candi.location,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey[700],
-                      ),
+                      style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                     ),
                   ],
                 ),
