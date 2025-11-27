@@ -71,7 +71,12 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
   }
 
-  // Fungsi untuk memilih gambar dari gallery
+  // Fungsi untuk memilih gambar dari gallery dan upload ke SharedPreferences
+  // - Buka image picker dari gallery
+  // - Convert gambar ke bytes kemudian encode ke base64
+  // - Simpan base64 string ke SharedPreferences dengan key 'profileImageBase64'
+  // - Update state untuk menampilkan gambar di CircleAvatar
+  // - Tampilkan SnackBar konfirmasi jika berhasil
   Future<void> _pickImage() async {
     try {
       final XFile? pickedFile =
@@ -116,8 +121,6 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   void initState() {
-    _checkSignInStatus();
-    
     _fadeAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -129,11 +132,12 @@ class _ProfileScreenState extends State<ProfileScreen>
     
     _fadeAnimationController.forward();
     
-    if (isSignedIn) {
-      _identitas();
-      _getFavoriteCount();
-      _loadProfileImage();
-    }
+    // Load sign in status dan data
+    _checkSignInStatus();
+    _loadProfileImage();
+    _identitas();
+    _getFavoriteCount();
+    
     super.initState();
   }
 
@@ -165,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       child: Padding(
                         padding: const EdgeInsets.only(top: 150),
                         child: Stack(
-                          alignment: Alignment.bottomRight,
+                          clipBehavior: Clip.none,
                           children: [
                             Container(
                               decoration: BoxDecoration(
@@ -190,11 +194,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     : null,
                               ),
                             ),
-                            if (isSignedIn)
-                              Positioned(
-                                bottom: -8,
-                                right: -8,
+                            // Camera button - positioned at bottom right corner
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: _pickImage,
                                 child: Container(
+                                  width: 40,
+                                  height: 40,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.deepPurple,
@@ -210,23 +218,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                     ],
                                   ),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: _pickImage,
-                                      customBorder: const CircleBorder(),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12),
-                                        child: Icon(
-                                          Icons.camera_alt,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                      ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                      size: 18,
                                     ),
                                   ),
                                 ),
                               ),
+                            ),
                           ],
                         ),
                       ),
