@@ -1,1 +1,2 @@
-##menambahkan beberapa todo untuk production##
+TODO: 
+1. Production build dan stand alone
