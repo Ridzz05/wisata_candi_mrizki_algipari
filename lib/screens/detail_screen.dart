@@ -52,7 +52,6 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
     );
   }
-
   // Favorite handler
   void toggleFavorite() async {
     final prefs = await SharedPreferences.getInstance();
