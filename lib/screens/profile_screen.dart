@@ -163,51 +163,71 @@ class _ProfileScreenState extends State<ProfileScreen>
                     Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 150), // 200 - 50 = 150
-                        child: ScaleTransition(
-                          scale: _fadeAnimation,
-                          child: Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.deepPurple,
-                                    width: 2,
-                                  ),
-                                  shape: BoxShape.circle,
+                        padding: const EdgeInsets.only(top: 150),
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.deepPurple,
+                                  width: 2,
                                 ),
-                                child: CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.deepPurple[100],
-                                  backgroundImage: profileImageBase64 != null
-                                      ? MemoryImage(base64Decode(profileImageBase64!))
-                                      : null,
-                                  child: profileImageBase64 == null
-                                      ? Icon(
-                                          Icons.person,
-                                          size: 60,
-                                          color: Colors.deepPurple,
-                                        )
-                                      : null,
-                                ),
+                                shape: BoxShape.circle,
                               ),
-                              if (isSignedIn)
-                                Container(
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundColor: Colors.deepPurple[100],
+                                backgroundImage: profileImageBase64 != null
+                                    ? MemoryImage(base64Decode(profileImageBase64!))
+                                    : null,
+                                child: profileImageBase64 == null
+                                    ? Icon(
+                                        Icons.person,
+                                        size: 60,
+                                        color: Colors.deepPurple,
+                                      )
+                                    : null,
+                              ),
+                            ),
+                            if (isSignedIn)
+                              Positioned(
+                                bottom: -8,
+                                right: -8,
+                                child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.deepPurple,
-                                  ),
-                                  child: IconButton(
-                                    onPressed: _pickImage,
-                                    icon: Icon(
-                                      Icons.camera_alt,
+                                    border: Border.all(
                                       color: Colors.white,
+                                      width: 3,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: _pickImage,
+                                      customBorder: const CircleBorder(),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                            ],
-                          ),
+                              ),
+                          ],
                         ),
                       ),
                     ),
@@ -215,92 +235,92 @@ class _ProfileScreenState extends State<ProfileScreen>
                     Divider(color: Colors.deepPurple[100]),
                     SizedBox(height: 4),
                     Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 3,
-                      child: Row(
-                        children: [
-                          Icon(Icons.lock, color: Colors.amber),
-                          SizedBox(width: 8),
-                          Text(
-                            'Pengguna',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: Row(
+                            children: [
+                              Icon(Icons.lock, color: Colors.amber),
+                              SizedBox(width: 8),
+                              Text(
+                                'Pengguna',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        ': $userName',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4),
-                Divider(color: Colors.deepPurple[100]),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 3,
-                      child: Row(
-                        children: [
-                          Icon(Icons.person, color: Colors.blue),
-                          SizedBox(width: 8),
-                          Text(
-                            'Nama',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            ': $userName',
+                            style: TextStyle(fontSize: 18),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: Text(
-                        ': $fullName',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4),
-                Divider(color: Colors.deepPurple[100]),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 3,
-                      child: Row(
-                        children: [
-                          Icon(Icons.favorite, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text(
-                            'Favorite',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    SizedBox(height: 4),
+                    Divider(color: Colors.deepPurple[100]),
+                    SizedBox(height: 4),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: Row(
+                            children: [
+                              Icon(Icons.person, color: Colors.blue),
+                              SizedBox(width: 8),
+                              Text(
+                                'Nama',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            ': $fullName',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: Text(
-                        ': $favoriteCandiCount',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                    SizedBox(height: 4),
+                    Divider(color: Colors.deepPurple[100]),
+                    SizedBox(height: 4),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: Row(
+                            children: [
+                              Icon(Icons.favorite, color: Colors.red),
+                              SizedBox(width: 8),
+                              Text(
+                                'Favorite',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            ': $favoriteCandiCount',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                isSignedIn
-                    ? TextButton(onPressed: signOut, child: Text('Sign Out'))
-                    : TextButton(onPressed: signIn, child: Text('Sign In')),
+                    isSignedIn
+                        ? TextButton(onPressed: signOut, child: const Text('Sign Out'))
+                        : TextButton(onPressed: signIn, child: const Text('Sign In')),
                   ],
                 ),
               ),
