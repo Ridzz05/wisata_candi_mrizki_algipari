@@ -157,7 +157,7 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/08/75/ab/a3/photo2jpg.jpg',
       'https://media-cdn.tripadvisor.com/media/photo-o/08/75/ab/a1/photo0jpg.jpg',
       'https://media-cdn.tripadvisor.com/media/photo-o/05/60/f7/12/jhago-temple.jpg',
-      'https://media-cdn.tripadvisor.com/media/photo-o/05/60/f6/e5/jhago-temple.jpg',
+'https://media-cdn.tripadvisor.com/media/photo-o/05/60/f6/e5/jhago-temple.jpg',
     ],
     isFavorite: false,
   ),
