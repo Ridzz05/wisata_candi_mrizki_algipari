@@ -15,6 +15,7 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen>
     with SingleTickerProviderStateMixin {
   List<Candi> _favoriteCandis = [];
+  bool _isSignedIn = false;
   late AnimationController _animationController;
 
   @override
@@ -36,9 +37,20 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   // Fungsi untuk memuat data favorit dari SharedPreferences
   Future<void> _loadFavorites() async {
     final prefs = await SharedPreferences.getInstance();
+    final signedIn = prefs.getBool('isSignedIn') ?? false;
+
+    if (!signedIn) {
+      setState(() {
+        _isSignedIn = false;
+        _favoriteCandis = [];
+      });
+      return;
+    }
+
     final favoriteNames = prefs.getStringList('favoriteCandiNames') ?? [];
 
     setState(() {
+      _isSignedIn = true;
       _favoriteCandis = candiList
           .where((candi) => favoriteNames.contains(candi.name))
           .toList();
@@ -72,109 +84,152 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Favorit Saya'), centerTitle: true),
-      body: _favoriteCandis.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ScaleTransition(
-                    scale: Tween<double>(begin: 0.5, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: _animationController,
-                        curve: Curves.elasticOut,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.favorite_border,
-                      size: 80,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) => FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.04),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        ),
+        child: !_isSignedIn
+            ? Center(
+                key: const ValueKey('locked'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.lock,
+                      size: 64,
                       color: Colors.deepPurple[200],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Belum ada favorit',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.deepPurple[300],
+                    const SizedBox(height: 12),
+                    const Text(
+                      'Silakan sign in untuk melihat favorit',
+                      style: TextStyle(fontSize: 16),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Tambahkan candi ke favorit dari detail screen',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.deepPurple[200],
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/signin').then((_) {
+                          _loadFavorites();
+                        });
+                      },
+                      child: const Text('Sign In'),
                     ),
-                  ),
-                ],
-              ),
-            )
-          : GridView.builder(
-              padding: const EdgeInsets.all(8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              itemCount: _favoriteCandis.length,
-              itemBuilder: (context, index) {
-                final Candi candi = _favoriteCandis[index];
-                final Animation<double> animation =
-                    Tween<double>(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: _animationController,
-                        curve: Interval(
-                          (index / _favoriteCandis.length),
-                          ((index + 1) / _favoriteCandis.length),
-                          curve: Curves.easeOut,
-                        ),
-                      ),
-                    );
-                return FadeTransition(
-                  opacity: animation,
-                  child: ScaleTransition(
-                    scale: animation,
-                    child: Stack(
+                  ],
+                ),
+              )
+            : _favoriteCandis.isEmpty
+                ? Center(
+                    key: const ValueKey('empty'),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ItemCard(
-                          candi: candi,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    DetailScreen(candi: candi),
-                              ),
-                            ).then((_) {
-                              // Refresh ketika kembali dari detail screen
-                              _loadFavorites();
-                            });
-                          },
-                        ),
-                        // Tombol hapus favorit
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: GestureDetector(
-                            onTap: () => _removeFavorite(candi),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withValues(alpha: 0.9),
-                              ),
-                              padding: const EdgeInsets.all(8),
-                              child: const Icon(
-                                Icons.close,
-                                color: Colors.red,
-                                size: 20,
-                              ),
+                        ScaleTransition(
+                          scale: Tween<double>(begin: 0.5, end: 1.0).animate(
+                            CurvedAnimation(
+                              parent: _animationController,
+                              curve: Curves.elasticOut,
                             ),
+                          ),
+                          child: Icon(
+                            Icons.favorite_border,
+                            size: 80,
+                            color: Colors.deepPurple[200],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Belum ada favorit',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.deepPurple[300],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Tambahkan candi ke favorit dari detail screen',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.deepPurple[200],
                           ),
                         ),
                       ],
                     ),
+                  )
+                : GridView.builder(
+                    key: const ValueKey('grid'),
+                    padding: const EdgeInsets.all(8),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemCount: _favoriteCandis.length,
+                    itemBuilder: (context, index) {
+                      final Candi candi = _favoriteCandis[index];
+                      final Animation<double> animation =
+                          Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: _animationController,
+                          curve: Interval(
+                            (index / _favoriteCandis.length),
+                            ((index + 1) / _favoriteCandis.length),
+                            curve: Curves.easeOut,
+                          ),
+                        ),
+                      );
+                      return FadeTransition(
+                        opacity: animation,
+                        child: ScaleTransition(
+                          scale: animation,
+                          child: Stack(
+                            children: [
+                              ItemCard(
+                                candi: candi,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          DetailScreen(candi: candi),
+                                    ),
+                                  ).then((_) {
+                                    // Refresh ketika kembali dari detail screen
+                                    _loadFavorites();
+                                  });
+                                },
+                              ),
+                              // Tombol hapus favorit
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: GestureDetector(
+                                  onTap: () => _removeFavorite(candi),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withValues(alpha: 0.9),
+                                    ),
+                                    padding: const EdgeInsets.all(8),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.red,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
+      ),
     );
   }
 }
