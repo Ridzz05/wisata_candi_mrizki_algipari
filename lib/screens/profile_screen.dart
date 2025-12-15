@@ -14,8 +14,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   // 1. Declare necessary variables
   bool isSignedIn = false;
-  String fullName = ''; // Example name
-  String userName = ''; // Example username
+  String fullName = ''; 
+  String userName = '';
   int favoriteCandiCount = 0;
   String? profileImageBase64;
 
@@ -70,13 +70,6 @@ class _ProfileScreenState extends State<ProfileScreen>
       favoriteCandiCount = favoriteNames.length;
     });
   }
-
-  // Fungsi untuk memilih gambar dari gallery dan upload ke SharedPreferences
-  // - Buka image picker dari gallery
-  // - Convert gambar ke bytes kemudian encode ke base64
-  // - Simpan base64 string ke SharedPreferences dengan key 'profileImageBase64'
-  // - Update state untuk menampilkan gambar di CircleAvatar
-  // - Tampilkan SnackBar konfirmasi jika berhasil
   Future<void> _pickImage() async {
     try {
       final XFile? pickedFile = await ImagePicker().pickImage(
