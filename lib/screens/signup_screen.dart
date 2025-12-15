@@ -26,39 +26,52 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final String username = _usernameController.text.trim();
     final String password = _passwordController.text.trim();
 
-    if (password.length < 8 ||
-        !password.contains(RegExp(r'[A-Z]')) ||
-        !password.contains(RegExp(r'[a-z]')) ||
-        !password.contains(RegExp(r'[0-9]')) ||
-        !password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+    // Validasi input kosong
+    if (name.isEmpty || username.isEmpty || password.isEmpty) {
       setState(() {
-        _errorText =
-            'Minimal 8 karakter, kombinasi [A-Z], [a-z], [0-9], [!@#\\\$%^&*(),.?":{}|<>]';
+        _errorText = 'Nama, username, dan password wajib diisi';
       });
       return;
     }
 
-    // TODO: 3. Jika name, username, password tidak kosong lakukan enkripsi
-    if (name.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
-      final encrypt.Key key = encrypt.Key.fromLength(32);
-      final iv = encrypt.IV.fromLength(16);
+    // Validasi kompleksitas password: minimal 8 karakter, kombinasi huruf dan angka (boleh huruf besar/kecil), tanpa syarat simbol
+    if (password.length < 8 ||
+        !password.contains(RegExp(r'[A-Za-z]')) ||
+        !password.contains(RegExp(r'[0-9]'))) {
+      setState(() {
+        _errorText = 'Minimal 8 karakter, gunakan huruf dan angka (bebas besar/kecil)';
+      });
+      return;
+    }
+
+    try {
+      // Gunakan key & iv acak lalu simpan agar bisa dipakai saat sign in
+      final encrypt.Key key = encrypt.Key.fromSecureRandom(32);
+      final iv = encrypt.IV.fromSecureRandom(16);
 
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
       final encryptedName = encrypter.encrypt(name, iv: iv);
       final encryptedUsername = encrypter.encrypt(username, iv: iv);
       final encryptedPassword = encrypter.encrypt(password, iv: iv);
 
-      // Simpan data pengguna di SharedPreferences
-      prefs.setString('fullname', encryptedName.base64);
-      prefs.setString('username', encryptedUsername.base64);
-      prefs.setString('password', encryptedPassword.base64);
-      prefs.setString('key', key.base64);
-      prefs.setString('iv', iv.base64);
-    }
+      await prefs.setString('fullname', encryptedName.base64);
+      await prefs.setString('username', encryptedUsername.base64);
+      await prefs.setString('password', encryptedPassword.base64);
+      await prefs.setString('key', key.base64);
+      await prefs.setString('iv', iv.base64);
+      await prefs.setBool('isSignedIn', false);
 
-    // Buat navigasi ke SignInScreen
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, '/signin');
+      setState(() {
+        _errorText = '';
+      });
+
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/signin');
+      }
+    } catch (e) {
+      setState(() {
+        _errorText = 'Gagal menyimpan akun: $e';
+      });
     }
   }
 

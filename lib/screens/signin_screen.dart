@@ -21,20 +21,36 @@ class _SignInScreenState extends State<SignInScreen> {
   Future<Map<String, String>> _retrieveAndDecryptDataFromPrefs(
     SharedPreferences sharedPreferences,
   ) async {
-    final encryptedUsername = sharedPreferences.getString('username') ?? '';
-    final encryptedPassword = sharedPreferences.getString('password') ?? '';
-    final keyString = sharedPreferences.getString('key') ?? '';
-    final ivString = sharedPreferences.getString('iv') ?? '';
+    final encryptedUsername = sharedPreferences.getString('username');
+    final encryptedPassword = sharedPreferences.getString('password');
+    final keyString = sharedPreferences.getString('key');
+    final ivString = sharedPreferences.getString('iv');
 
-    final encrypt.Key key = encrypt.Key.fromBase64(keyString);
-    final iv = encrypt.IV.fromBase64(ivString);
+    // Jika belum ada akun tersimpan, kembalikan map kosong
+    if (encryptedUsername == null ||
+        encryptedPassword == null ||
+        keyString == null ||
+        ivString == null ||
+        encryptedUsername.isEmpty ||
+        encryptedPassword.isEmpty ||
+        keyString.isEmpty ||
+        ivString.isEmpty) {
+      return {};
+    }
 
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-    final decryptedUsername = encrypter.decrypt64(encryptedUsername, iv: iv);
-    final decryptedPassword = encrypter.decrypt64(encryptedPassword, iv: iv);
+    try {
+      final encrypt.Key key = encrypt.Key.fromBase64(keyString);
+      final iv = encrypt.IV.fromBase64(ivString);
 
-    // Mengembalikan data terdekripsi
-    return {'username': decryptedUsername, 'password': decryptedPassword};
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final decryptedUsername = encrypter.decrypt64(encryptedUsername, iv: iv);
+      final decryptedPassword = encrypter.decrypt64(encryptedPassword, iv: iv);
+
+      return {'username': decryptedUsername, 'password': decryptedPassword};
+    } catch (_) {
+      // Jika terjadi kesalahan dekripsi, anggap data tidak valid
+      return {};
+    }
   }
 
   void _signIn() async {
@@ -42,39 +58,46 @@ class _SignInScreenState extends State<SignInScreen> {
       final Future<SharedPreferences> prefsFuture =
           SharedPreferences.getInstance();
 
-      final String username = _usernameController.text;
-      final String password = _passwordController.text;
+      final String username = _usernameController.text.trim();
+      final String password = _passwordController.text.trim();
 
-      if (username.isNotEmpty && password.isNotEmpty) {
-        final SharedPreferences prefs = await prefsFuture;
-        final data = await _retrieveAndDecryptDataFromPrefs(prefs);
-        if (data.isNotEmpty) {
-          final decryptedUsername = data['username'];
-          final decryptedPassword = data['password'];
-          if (username == decryptedUsername && password == decryptedPassword) {
-            _errorText = '';
-            prefs.setBool('isSignedIn', true);
-            // Pemanggilan untuk menghapus semua halaman dalam tumpukan navigasi
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            });
-            // Sign in berhasil, navigasikan ke layar utama
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushReplacementNamed(context, '/');
-            });
-          } else {
-            setState(() {
-              _errorText = 'Username atau password tidak sesuai';
-            });
-          }
-        } else {
-          setState(() {
-            _errorText = 'Akun tidak ditemukan';
-          });
-        }
-      } else {
+      if (username.isEmpty || password.isEmpty) {
         setState(() {
           _errorText = 'Username dan password tidak boleh kosong';
+        });
+        return;
+      }
+
+      final SharedPreferences prefs = await prefsFuture;
+      final data = await _retrieveAndDecryptDataFromPrefs(prefs);
+
+      if (data.isEmpty) {
+        setState(() {
+          _errorText = 'Akun tidak ditemukan. Silakan sign up terlebih dahulu.';
+        });
+        return;
+      }
+
+      final decryptedUsername = data['username'];
+      final decryptedPassword = data['password'];
+
+      if (username == decryptedUsername && password == decryptedPassword) {
+        await prefs.setBool('isSignedIn', true);
+        setState(() {
+          _errorText = '';
+        });
+
+        // Pemanggilan untuk menghapus semua halaman dalam tumpukan navigasi
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        });
+        // Sign in berhasil, navigasikan ke layar utama
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, '/');
+        });
+      } else {
+        setState(() {
+          _errorText = 'Username atau password tidak sesuai';
         });
       }
     } catch (e) {
